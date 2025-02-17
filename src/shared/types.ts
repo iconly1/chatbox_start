@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
-import { Model } from '../renderer/packages/models/openai'
-import * as siliconflow from '../renderer/packages/models/siliconflow'
-import { ClaudeModel } from '../renderer/packages/models/claude'
+import { Model } from '../packages/models/openai'
+import * as siliconflow from '../packages/models/siliconflow'
+import { ClaudeModel } from '../packages/models/claude'
 
 export const MessageRoleEnum = {
     System: 'system',
@@ -11,10 +11,11 @@ export const MessageRoleEnum = {
 
 export type MessageRole = (typeof MessageRoleEnum)[keyof typeof MessageRoleEnum]
 
-export interface Message {
+export interface IMessage {
     id: string
 
     role: MessageRole
+    reasoning_content?: string
     content: string
     name?: string
 
@@ -40,20 +41,20 @@ export type SettingWindowTab = 'ai' | 'display' | 'chat' | 'advanced'
 
 export type SessionType = 'chat'
 
-export function isChatSession(session: Session) {
+export function isChatSession(session: ISession) {
     return session.type === 'chat' || !session.type
 }
 
-export interface Session {
+export interface ISession {
     id: string
     type?: SessionType
     name: string
     picUrl?: string
-    messages: Message[]
+    messages: IMessage[]
     copilotId?: string
 }
 
-export function createMessage(role: MessageRole = MessageRoleEnum.User, content: string = ''): Message {
+export function createMessage(role: MessageRole = MessageRoleEnum.User, content: string = ''): IMessage {
     return {
         id: uuidv4(),
         content: content,
